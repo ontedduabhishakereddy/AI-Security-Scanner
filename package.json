@@ -1,0 +1,205 @@
+{
+  "name": "ai-security-scanner",
+  "displayName": "AI Security Scanner",
+  "description": "Real-time detection of prompt injection, data leakage risks, and AI API misuse in your code — before they reach production.",
+  "version": "1.0.0",
+  "publisher": "ontedduabhishakereddy",
+  "license": "MIT",
+  "icon": "icon.png",
+  "galleryBanner": {
+    "color": "#0D1117",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Linters",
+    "Other"
+  ],
+  "keywords": [
+    "security",
+    "AI",
+    "prompt injection",
+    "data leakage",
+    "API misuse",
+    "LLM",
+    "scanner",
+    "SAST"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ontedduabhishakereddy/AI-Security-Scanner"
+  },
+  "bugs": {
+    "url": "https://github.com/ontedduabhishakereddy/AI-Security-Scanner"
+  },
+  "homepage": "https://github.com/ontedduabhishakereddy/AI-Security-Scanner#readme",
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:typescript",
+    "onLanguage:python",
+    "onLanguage:json",
+    "onLanguage:yaml",
+    "onLanguage:markdown",
+    "onLanguage:plaintext"
+  ],
+  "main": "./out/src/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "aiSecurityScanner.scanCurrentFile",
+        "title": "AI Security Scanner: Scan Current File",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "aiSecurityScanner.scanWorkspace",
+        "title": "AI Security Scanner: Scan Entire Workspace",
+        "icon": "$(search)"
+      },
+      {
+        "command": "aiSecurityScanner.showReport",
+        "title": "AI Security Scanner: Show Security Report",
+        "icon": "$(graph)"
+      },
+      {
+        "command": "aiSecurityScanner.clearFindings",
+        "title": "AI Security Scanner: Clear All Findings",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "aiSecurityScanner.openSettings",
+        "title": "AI Security Scanner: Open Settings",
+        "icon": "$(gear)"
+      }
+    ],
+    "configuration": {
+      "title": "AI Security Scanner",
+      "properties": {
+        "aiSecurityScanner.enableOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically scan files when saved."
+        },
+        "aiSecurityScanner.enableRealTime": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable real-time scanning as you type (debounced 500ms)."
+        },
+        "aiSecurityScanner.scanWorkspaceOnStart": {
+          "type": "boolean",
+          "default": false,
+          "description": "Scan the entire workspace when VS Code starts."
+        },
+        "aiSecurityScanner.ignoredPaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "node_modules",
+            ".git",
+            "dist"
+          ],
+          "description": "Paths to ignore during scanning."
+        },
+        "aiSecurityScanner.severityThreshold": {
+          "type": "string",
+          "enum": [
+            "critical",
+            "warning",
+            "info"
+          ],
+          "default": "info",
+          "description": "Minimum severity level to report findings."
+        },
+        "aiSecurityScanner.customPatterns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the custom pattern."
+              },
+              "pattern": {
+                "type": "string",
+                "description": "Regex pattern to match."
+              },
+              "category": {
+                "type": "string",
+                "enum": [
+                  "prompt-injection",
+                  "data-leakage",
+                  "api-misuse"
+                ],
+                "description": "Category of the finding."
+              },
+              "severity": {
+                "type": "string",
+                "enum": [
+                  "critical",
+                  "warning",
+                  "info"
+                ],
+                "description": "Severity level."
+              },
+              "message": {
+                "type": "string",
+                "description": "Description of the risk."
+              },
+              "fix": {
+                "type": "string",
+                "description": "Suggested fix."
+              }
+            },
+            "required": [
+              "name",
+              "pattern",
+              "category",
+              "severity",
+              "message"
+            ]
+          },
+          "default": [],
+          "description": "User-defined custom detection patterns."
+        }
+      }
+    },
+    "menus": {
+      "editor/context": [
+        {
+          "command": "aiSecurityScanner.scanCurrentFile",
+          "group": "aiSecurityScanner",
+          "when": "editorTextFocus"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "aiSecurityScanner.scanCurrentFile",
+          "group": "navigation",
+          "when": "editorTextFocus"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "test": "node ./out/test/suite/scanner.test.js",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3",
+    "@vscode/vsce": "^2.22.0"
+  }
+}
